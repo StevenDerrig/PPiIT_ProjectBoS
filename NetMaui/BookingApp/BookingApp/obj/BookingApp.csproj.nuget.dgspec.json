@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\BookingApp.csproj": {}
+    "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\BookingApp.csproj": {}
   },
   "projects": {
-    "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\BookingApp.csproj": {
+    "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\BookingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\BookingApp.csproj",
+        "projectUniqueName": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\BookingApp.csproj",
         "projectName": "BookingApp",
-        "projectPath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\BookingApp.csproj",
+        "projectPath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\BookingApp.csproj",
         "packagesPath": "C:\\Users\\Steeb\\.nuget\\packages\\",
-        "outputPath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\obj\\",
+        "outputPath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [

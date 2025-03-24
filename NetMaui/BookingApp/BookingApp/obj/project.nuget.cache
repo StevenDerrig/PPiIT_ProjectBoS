@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HBvejhBCtpE=",
+  "dgSpecHash": "NEE3m76ZPbw=",
   "success": true,
-  "projectFilePath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMuai\\BookingApp\\BookingApp\\BookingApp.csproj",
+  "projectFilePath": "C:\\LocalCollegeWork\\Year 3\\Semester 2\\PPiIT_Project\\NetMaui\\BookingApp\\BookingApp\\BookingApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Steeb\\.nuget\\packages\\googlegson\\2.11.0.3\\googlegson.2.11.0.3.nupkg.sha512",
     "C:\\Users\\Steeb\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.0\\microsoft.extensions.configuration.9.0.0.nupkg.sha512",
