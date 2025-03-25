@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BookingApp.CheckBookingPage"
-             Title="CheckBookingPage">
+             x:Class="BookingApp.UpdateBookingPage"
+             Title="UpdateBookingPage">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to the Check Booking Page"
+            Text="Update a booking"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>

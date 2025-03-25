@@ -68,10 +68,28 @@
 	  <Compile Update="CheckBookingPage.xaml.cs">
 	    <DependentUpon>CheckBookingPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="SettingsPage.xaml.cs">
+	    <DependentUpon>SettingsPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="UpdateBookingPage.xaml.cs">
+	    <DependentUpon>UpdateBookingPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="MakeBookingPage.xaml.cs">
+	    <DependentUpon>MakeBookingPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="CheckBookingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="UpdateBookingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MakeBookingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

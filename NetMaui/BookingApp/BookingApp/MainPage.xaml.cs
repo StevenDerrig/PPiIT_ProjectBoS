@@ -31,31 +31,28 @@ namespace BookingApp
         {
             // Navigate to Check Bookings Page
             await DisplayAlert("Navigation", "Navigating to Check Bookings", "OK");
-            await Navigation.PushAsync(new CheckBookingPage1());
+            await Navigation.PushAsync(new CheckBookingPage());
         }
 
         private async void OnMakeABookBtn(object sender, EventArgs e)
         {
             // Navigate to Make a Booking Page
             await DisplayAlert("Navigation", "Navigating to Make a Booking", "OK");
-            // Actual navigation code would be:
-            // await Navigation.PushAsync(new MakeBookingPage());
+            await Navigation.PushAsync(new MakeBookingPage());
         }
 
         private async void OnUpdateBookBtn(object sender, EventArgs e)
         {
             // Navigate to Update Booking Page
             await DisplayAlert("Navigation", "Navigating to Update Booking", "OK");
-            // Actual navigation code would be:
-            // await Navigation.PushAsync(new UpdateBookingPage());
+            await Navigation.PushAsync(new UpdateBookingPage());
         }
 
         private async void OnSettingsBtn(object sender, EventArgs e)
         {
             // Navigate to Settings Page
             await DisplayAlert("Navigation", "Navigating to Settings", "OK");
-            // Actual navigation code would be:
-            // await Navigation.PushAsync(new SettingsPage());
+            await Navigation.PushAsync(new SettingsPage());
         }
 
         protected override void OnDisappearing()

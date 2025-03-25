@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BookingApp.MainPage"
              Title="GreenBay BookingApp"
-             BackgroundColor="#7CEB85">
+             BackgroundColor="#64DF89">
 
     <Grid RowDefinitions="Auto,*" Padding="15">
         <!-- Header with Title -->
         <Border Grid.Row="0" 
-                BackgroundColor="#945A65" 
+                BackgroundColor="#8F4A56" 
                 Padding="10" 
                 StrokeThickness="0">
             <Label Text="Green Bay Booking System" 
-                   TextColor="Black" 
+                   TextColor="#4A8F83" 
                    FontSize="22" 
                    HorizontalOptions="Center" 
                    FontAttributes="Bold"/>
@@ -41,7 +41,7 @@
                         Text="Check Bookings ✓" 
                         SemanticProperties.Hint="Brings you to Check Bookings Page"
                         Clicked="OnCheckBookBtn"
-                        BackgroundColor="#945A65"
+                        BackgroundColor="#8F4A56"
                         TextColor="White"
                         FontSize="18"
                         HeightRequest="60"
@@ -51,7 +51,7 @@
                         Text="Make a Booking +" 
                         SemanticProperties.Hint="Brings you to Make a Booking Page"
                         Clicked="OnMakeABookBtn"
-                        BackgroundColor="#945A65"
+                        BackgroundColor="#8F4A56"
                         TextColor="White"
                         FontSize="18"
                         HeightRequest="60"
@@ -61,7 +61,7 @@
                         Text="Update Booking ✏️" 
                         SemanticProperties.Hint="Brings you to Update Bookings Page"
                         Clicked="OnUpdateBookBtn"
-                        BackgroundColor="#945A65"
+                        BackgroundColor="#8F4A56"
                         TextColor="White"
                         FontSize="18"
                         HeightRequest="60"
@@ -71,7 +71,7 @@
                         Text="Settings ⚙️" 
                         SemanticProperties.Hint="Brings you to Settings Page"
                         Clicked="OnSettingsBtn"
-                        BackgroundColor="#945A65"
+                        BackgroundColor="#8F4A56"
                         TextColor="White"
                         FontSize="18"
                         HeightRequest="60"

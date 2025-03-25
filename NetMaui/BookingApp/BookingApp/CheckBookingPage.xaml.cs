@@ -1,8 +1,8 @@
 namespace BookingApp;
 
-public partial class CheckBookingPage1 : ContentPage
+public partial class CheckBookingPage : ContentPage
 {
-	public CheckBookingPage1()
+	public CheckBookingPage()
 	{
 		InitializeComponent();
 	}
