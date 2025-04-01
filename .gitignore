@@ -2,13 +2,58 @@
 *.docx
 *.xlsx
 
+# Java files to ignore
 # Log files
 *.log
-
+logs/
 # IDE files
 .idea/
 .vscode/
+*.iws
+*.ipr
 *.iml
-
+.classpath
+.project
+.settings/
 # Compliled Java files
 *.class
+/SQL
+# Java build files
+/target/
+/build/
+/out/
+# Maven files
+.mvn/wrapper/maven-wrapper.jar
+# Application property details
+**/application-*.properties
+**/application-*.yml
+!**/application-example.properties
+!**/application-example.yml
+
+#
+#
+#
+#
+
+# .Net Maui files to ignore
+# Build files
+/bin/
+/obj/
+/Debug/
+/Release/
+# Specific user files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+# Visual Studio files
+.vs/
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.aps
