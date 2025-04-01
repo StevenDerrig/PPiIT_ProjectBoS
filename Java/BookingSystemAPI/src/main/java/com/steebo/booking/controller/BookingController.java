@@ -1,0 +1,242 @@
+package com.steebo.booking.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.steebo.booking.model.Booking;
+import com.steebo.booking.model.Guest;
+import com.steebo.booking.model.Room;
+import com.steebo.booking.service.BookingService;
+import com.steebo.booking.service.GuestService;
+import com.steebo.booking.service.RoomService;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/bookings")
+@CrossOrigin(origins = "*") // For development - restrict in production
+public class BookingController {
+
+    private final BookingService bookingService;
+    private final GuestService guestService;
+    private final RoomService roomService;
+
+    @Autowired
+    public BookingController(BookingService bookingService, GuestService guestService, RoomService roomService) {
+        this.bookingService = bookingService;
+        this.guestService = guestService;
+        this.roomService = roomService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Booking> getBookingById(@PathVariable Integer id) {
+        return bookingService.getBookingById(id)
+                .map(booking -> new ResponseEntity<>(booking, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/guest/{guestId}")
+    public ResponseEntity<List<Booking>> getBookingsByGuest(@PathVariable Integer guestId) {
+        return guestService.getGuestById(guestId)
+                .map(guest -> {
+                    List<Booking> bookings = bookingService.getBookingsByGuest(guest);
+                    return new ResponseEntity<>(bookings, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<List<Booking>> getBookingsByRoom(@PathVariable Integer roomId) {
+        return roomService.getRoomById(roomId)
+                .map(room -> {
+                    List<Booking> bookings = bookingService.getBookingsByRoom(room);
+                    return new ResponseEntity<>(bookings, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Booking>> getBookingsByStatus(@PathVariable String status) {
+        try {
+            Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status);
+            List<Booking> bookings = bookingService.getBookingsByStatus(bookingStatus);
+            return new ResponseEntity<>(bookings, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest request) {
+        try {
+            // Get guest and room
+            Optional<Guest> guestOpt = guestService.getGuestById(request.getGuestId());
+            Optional<Room> roomOpt = roomService.getRoomById(request.getRoomId());
+            
+            if (guestOpt.isEmpty() || roomOpt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            
+            Guest guest = guestOpt.get();
+            Room room = roomOpt.get();
+            
+            // Check if room is available for the requested dates
+            if (!roomService.isRoomAvailable(room.getRoomId(), request.getCheckInDate(), request.getCheckOutDate())) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            
+            // Create and populate booking object
+            Booking booking = new Booking(guest, room, request.getCheckInDate(), request.getCheckOutDate());
+            booking.setBreakfastIncluded(request.isBreakfastIncluded());
+            booking.setNotes(request.getNotes());
+            
+            // Calculate total price based on number of nights
+            long nights = (request.getCheckOutDate().getTime() - request.getCheckInDate().getTime()) / (1000 * 60 * 60 * 24);
+            int totalPrice = room.getPricePerNight() * (int)nights;
+            booking.setTotalPrice(totalPrice);
+            
+            // Save booking
+            Booking savedBooking = bookingService.saveBooking(booking);
+            
+            // Update room status
+            room.setStatus(Room.Status.occupied);
+            roomService.saveRoom(room);
+            
+            return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Booking> updateBooking(@PathVariable Integer id, @RequestBody Booking booking) {
+        return bookingService.getBookingById(id)
+                .map(existingBooking -> {
+                    booking.setBookingId(id);
+                    Booking updatedBooking = bookingService.saveBooking(booking);
+                    return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Booking> updateBookingStatus(
+            @PathVariable Integer id, 
+            @RequestParam String status) {
+        try {
+            Booking.BookingStatus bookingStatus = Booking.BookingStatus.valueOf(status);
+            
+            return bookingService.getBookingById(id)
+                    .map(booking -> {
+                        booking.setBookingStatus(bookingStatus);
+                        
+                        // Handle room status update
+                        Room room = booking.getRoom();
+                        if (bookingStatus == Booking.BookingStatus.checked_out || 
+                            bookingStatus == Booking.BookingStatus.cancelled) {
+                            room.setStatus(Room.Status.available);
+                            roomService.saveRoom(room);
+                        } else if (bookingStatus == Booking.BookingStatus.checked_in) {
+                            room.setStatus(Room.Status.occupied);
+                            roomService.saveRoom(room);
+                        }
+                        
+                        Booking updatedBooking = bookingService.saveBooking(booking);
+                        return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
+                    })
+                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
+        return bookingService.getBookingById(id)
+                .map(booking -> {
+                    // Free up the room if needed
+                    Room room = booking.getRoom();
+                    room.setStatus(Room.Status.available);
+                    roomService.saveRoom(room);
+                    
+                    bookingService.deleteBooking(id);
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    // Inner class for booking request
+    public static class BookingRequest {
+        private Integer guestId;
+        private Integer roomId;
+        
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private Date checkInDate;
+        
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private Date checkOutDate;
+        
+        private boolean breakfastIncluded;
+        private String notes;
+        
+        // Getters and setters
+        public Integer getGuestId() {
+            return guestId;
+        }
+        
+        public void setGuestId(Integer guestId) {
+            this.guestId = guestId;
+        }
+        
+        public Integer getRoomId() {
+            return roomId;
+        }
+        
+        public void setRoomId(Integer roomId) {
+            this.roomId = roomId;
+        }
+        
+        public Date getCheckInDate() {
+            return checkInDate;
+        }
+        
+        public void setCheckInDate(Date checkInDate) {
+            this.checkInDate = checkInDate;
+        }
+        
+        public Date getCheckOutDate() {
+            return checkOutDate;
+        }
+        
+        public void setCheckOutDate(Date checkOutDate) {
+            this.checkOutDate = checkOutDate;
+        }
+        
+        public boolean isBreakfastIncluded() {
+            return breakfastIncluded;
+        }
+        
+        public void setBreakfastIncluded(boolean breakfastIncluded) {
+            this.breakfastIncluded = breakfastIncluded;
+        }
+        
+        public String getNotes() {
+            return notes;
+        }
+        
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
+    }
+}
