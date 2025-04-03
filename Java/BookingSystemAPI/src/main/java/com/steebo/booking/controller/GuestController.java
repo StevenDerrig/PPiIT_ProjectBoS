@@ -20,6 +20,8 @@ public class GuestController {
     @Autowired
     public GuestController(GuestService guestService) {
         this.guestService = guestService;
+        
+        System.out.println("Guest Controller Running");
     }
 
     @GetMapping
@@ -77,11 +79,31 @@ public class GuestController {
 
     @PostMapping("/find-or-create")
     public ResponseEntity<Guest> findOrCreateGuest(@RequestBody GuestCreateRequest request) {
-        Guest guest = guestService.findOrCreateGuest(
-            request.getFirstName(), 
-            request.getLastName(), 
-            request.getContactNumber());
-        return new ResponseEntity<>(guest, HttpStatus.OK);
+    	try 
+    	{
+    		System.out.println("Recived guest request: " + request);
+    		
+    		Guest guest = guestService.findOrCreateGuest(
+    	            request.getFirstName(), 
+    	            request.getLastName(), 
+    	            request.getContactNumber());
+    		System.out.println("Created/found guest: " + guest);
+    		
+    		if (guest == null || guest.getGuestId() == null)
+    		{
+    			System.out.println("Error: Failed to create/find guest");
+    			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		}
+    		
+    		return new ResponseEntity<>(guest, HttpStatus.OK);
+    	}
+    	catch(Exception e)
+    	{
+    		System.err.println("ERROR in findOrCreateGuest: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+        
     }
     //Class for accepting data from the front end
     public static class GuestCreateRequest {

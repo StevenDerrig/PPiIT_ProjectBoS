@@ -31,6 +31,8 @@ public class BookingController {
         this.bookingService = bookingService;
         this.guestService = guestService;
         this.roomService = roomService;
+        
+        System.out.println("Booking Controller Running");
     }
 
     @GetMapping
@@ -80,6 +82,12 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest request) {
         try {
+        	System.out.println("Recived booking request: " + request);
+        	System.out.println("Guest ID: " + request.getGuestId());
+        	System.out.println("Room ID: " + request.getRoomId());
+        	System.out.println("Check-In Date: " + request.getCheckInDate());
+        	System.out.println("Check-out date: " + request.getCheckOutDate());
+        	
             // Get guest and room
             Optional<Guest> guestOpt = guestService.getGuestById(request.getGuestId());
             Optional<Room> roomOpt = roomService.getRoomById(request.getRoomId());
@@ -114,7 +122,10 @@ public class BookingController {
             roomService.saveRoom(room);
             
             return new ResponseEntity<>(savedBooking, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } 
+        
+        catch (Exception e) 
+        {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -237,6 +248,18 @@ public class BookingController {
         
         public void setNotes(String notes) {
             this.notes = notes;
+        }
+        
+        @Override
+        public String toString() {
+        	return "BookingRequest{" +
+                    "guestId=" + guestId +
+                    ", roomId=" + roomId +
+                    ", checkInDate=" + checkInDate +
+                    ", checkOutDate=" + checkOutDate +
+                    ", breakfastIncluded=" + breakfastIncluded +
+                    ", notes='" + notes + '\'' +
+                    '}';
         }
     }
 }

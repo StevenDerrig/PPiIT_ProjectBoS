@@ -22,6 +22,8 @@ public class RoomController {
     @Autowired
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
+        
+        System.out.println("Room Controller Running");
     }
 
     @GetMapping
