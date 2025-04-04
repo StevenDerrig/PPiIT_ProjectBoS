@@ -8,16 +8,87 @@
     <Grid RowDefinitions="Auto,*" Padding="15">
         <!-- Header with Title -->
         <Border Grid.Row="0" 
-                BackgroundColor="#8F4A56" 
-                Padding="10" 
-                StrokeThickness="0">
+             BackgroundColor="#8F4A56" 
+             Padding="10" 
+             StrokeThickness="0">
             <Label Text="Make a Booking" 
-                   TextColor="#4A8F83" 
-                   FontSize="22" 
-                   HorizontalOptions="Center" 
-                   FontAttributes="Bold"/>
+                TextColor="#4A8F83" 
+                FontSize="22" 
+                HorizontalOptions="Center" 
+                FontAttributes="Bold"/>
         </Border>
 
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="25" Padding="30">
+                <Label 
+                Text="Create New Booking"
+                FontSize="24"
+                HorizontalOptions="Center" />
+
+                <!-- Room Selection -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Select Room:" FontAttributes="Bold" TextColor="Black"/>
+                    <Picker x:Name="RoomPicker" Title="Select a room" TitleColor="Black" BackgroundColor="Black"/>
+                </VerticalStackLayout>
+
+                <!-- Guest Information -->
+                <Border Stroke="LightGray" Padding="10" BackgroundColor="Black">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Guest Information" FontAttributes="Bold" />
+
+                        <Label Text="First Name:" />
+                        <Entry x:Name="FirstNameEntry" Placeholder="Enter first name" />
+
+                        <Label Text="Last Name:" />
+                        <Entry x:Name="LastNameEntry" Placeholder="Enter last name" />
+
+                        <Label Text="Contact Number:" />
+                        <Entry x:Name="ContactNumberEntry" Placeholder="Enter contact number" />
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Booking Details -->
+                <Border Stroke="LightGray" Padding="10" BackgroundColor="Black">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Booking Details" FontAttributes="Bold" />
+
+                        <Label Text="Check-in Date:" />
+                        <DatePicker x:Name="CheckInDatePicker" MinimumDate="{Binding Today}" />
+
+                        <Label Text="Check-out Date:" />
+                        <DatePicker x:Name="CheckOutDatePicker" MinimumDate="{Binding Tomorrow}" />
+
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox x:Name="BreakfastCheckBox" />
+                            <Label Text="Include Breakfast" VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <Label Text="Notes (optional):" />
+                        <Editor x:Name="NotesEditor" HeightRequest="100" Placeholder="Any special requests?" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Pricing Summary -->
+                <Border Stroke="LightGray" Padding="10" BackgroundColor="Black">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Pricing Summary" FontAttributes="Bold" />
+                        <Label x:Name="NightsLabel" Text="Number of nights: 0" />
+                        <Label x:Name="PricePerNightLabel" Text="Price per night: €0" />
+                        <Label x:Name="TotalPriceLabel" Text="Total price: €0" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Create Booking Button -->
+                <Button 
+                x:Name="CreateBookingButton"
+                Text="Create Booking"
+                Clicked="OnCreateBookingClicked"
+                HorizontalOptions="Fill"
+                BackgroundColor="#2196F3"
+                TextColor="White" />
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
-    
+
 </ContentPage>

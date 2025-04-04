@@ -4,20 +4,44 @@
              x:Class="BookingApp.CheckBookingPage"
              Title="Check Booking Page"
              BackgroundColor="#64DF89">
-
+    
     <Grid RowDefinitions="Auto,*" Padding="15">
         <!-- Header with Title -->
         <Border Grid.Row="0" 
-                BackgroundColor="#8F4A56" 
-                Padding="10" 
-                StrokeThickness="0">
+            BackgroundColor="#8F4A56" 
+            Padding="10" 
+            StrokeThickness="0">
             <Label Text="Check Bookings" 
-                   TextColor="#4A8F83" 
-                   FontSize="22" 
-                   HorizontalOptions="Center" 
-                   FontAttributes="Bold"/>
+               TextColor="#4A8F83" 
+               FontSize="22" 
+               HorizontalOptions="Center" 
+               FontAttributes="Bold"/>
         </Border>
+    
+    
+    <StackLayout Padding="20" Grid.Row="1">
+        <Label Text="Available Rooms" 
+               FontSize="24" 
+               FontAttributes="Bold"
+               Margin="0,0,0,20"/>
 
+        <ListView x:Name="RoomsListView" HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Border Margin="5" Padding="10" Stroke="LightGray">
+                            <StackLayout>
+                                <Label Text="{Binding RoomNumber, StringFormat='Room: {0}'}" FontAttributes="Bold"/>
+                                <Label Text="{Binding RoomType, StringFormat='Type: {0}'}"/>
+                                <Label Text="{Binding PricePerNight, StringFormat='Price: ${0}/night'}"/>
+                                <Label Text="{Binding Status, StringFormat='Status: {0}'}" 
+                                       TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
+                            </StackLayout>
+                        </Border>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
     </Grid>
-
 </ContentPage>

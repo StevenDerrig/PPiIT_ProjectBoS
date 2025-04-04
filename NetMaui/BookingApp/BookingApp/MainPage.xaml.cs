@@ -11,6 +11,7 @@ namespace BookingApp
         {
             InitializeComponent();
             UpdateTimeAndDate();
+            Console.WriteLine("Main Page Loaded");
 
             // Set up timer to update the time every minute
             _timer = Dispatcher.CreateTimer();
@@ -30,28 +31,24 @@ namespace BookingApp
         private async void OnCheckBookBtn(object sender, EventArgs e)
         {
             // Navigate to Check Bookings Page
-            await DisplayAlert("Navigation", "Navigating to Check Bookings", "OK");
             await Navigation.PushAsync(new CheckBookingPage());
         }
 
         private async void OnMakeABookBtn(object sender, EventArgs e)
         {
             // Navigate to Make a Booking Page
-            await DisplayAlert("Navigation", "Navigating to Make a Booking", "OK");
             await Navigation.PushAsync(new MakeBookingPage());
         }
 
         private async void OnUpdateBookBtn(object sender, EventArgs e)
         {
             // Navigate to Update Booking Page
-            await DisplayAlert("Navigation", "Navigating to Update Booking", "OK");
             await Navigation.PushAsync(new UpdateBookingPage());
         }
 
         private async void OnSettingsBtn(object sender, EventArgs e)
         {
             // Navigate to Settings Page
-            await DisplayAlert("Navigation", "Navigating to Settings", "OK");
             await Navigation.PushAsync(new SettingsPage());
         }
 
