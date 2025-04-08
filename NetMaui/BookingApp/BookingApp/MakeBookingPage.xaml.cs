@@ -132,16 +132,15 @@ public partial class MakeBookingPage : ContentPage
                 CheckInDate = CheckInDatePicker.Date,
                 CheckOutDate = CheckOutDatePicker.Date,
                 BreakfastIncluded = BreakfastCheckBox.IsChecked,
-                Notes = NotesEditor.Text
+                Notes = NotesEditor.Text?.Replace("\r\n", " | ").Replace("\n", " | ")// Better able to hanlde multiple lines for the db
             };
 
-            //Logging the booking request
+            // Logging the booking request
             var bookingJson = System.Text.Json.JsonSerializer.Serialize(bookingRequest);
             Console.WriteLine($"Sending booking data: {bookingJson}");
 
             // Submit booking
             var booking = await _bookingService.CreateBookingAsync(bookingRequest);
-
             await DisplayAlert("Success", $"Booking created successfully! Booking ID: {booking.BookingId}", "OK");
             Console.WriteLine($"Sending booking: {System.Text.Json.JsonSerializer.Serialize(booking)}");
 

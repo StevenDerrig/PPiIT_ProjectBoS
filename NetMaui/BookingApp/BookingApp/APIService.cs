@@ -27,7 +27,7 @@ public class APIService
     // Generic POST method
     public async Task<T> PostAsync<T>(string endpoint, object data)
     {
-        try 
+        try
         {
             var json = JsonSerializer.Serialize(data);
             Console.WriteLine($"Sending to {_baseUrl}{endpoint}: {json}");
@@ -40,9 +40,15 @@ public class APIService
             Console.WriteLine($"Received response: {responseContent}");
 
             response.EnsureSuccessStatusCode();
-            return JsonSerializer.Deserialize<T>(responseContent);
+
+            // Configure JSON serializer options to be case-insensitive
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            return JsonSerializer.Deserialize<T>(responseContent, options);
         }
-       
         catch (HttpRequestException ex)
         {
             // Try to get response content if available
