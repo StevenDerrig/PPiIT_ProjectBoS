@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.steebo.booking.model.Guest;
 import com.steebo.booking.repository.GuestRepo;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,8 @@ public class GuestService {
 		// If no existing guest found, create a new one
 		System.out.println("Creating new guest with: firstName=" + firstName + ", lastName=" + lastName + ", contactNumber=" + contactNumber);
 		Guest newGuest = new Guest(firstName, lastName, contactNumber);
+		newGuest.setCreatedAt(new Date());
+		
 		return guestRepository.save(newGuest);
 	}
 }

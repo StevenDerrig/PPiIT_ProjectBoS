@@ -12,9 +12,9 @@ public class RoomService
         _apiService = apiService;
     }
 
-    public Task<List<Room>> GetAllRoomsAsync()
+    public async Task<List<Room>> GetAllRoomsAsync()
     {
-        return _apiService.GetAsync<List<Room>>("rooms");
+        return await _apiService.GetAsync<List<Room>>("rooms");
     }
 
     public Task<List<Room>> GetAvailableRoomsAsync()
@@ -22,9 +22,9 @@ public class RoomService
         return _apiService.GetAsync<List<Room>>("rooms/available");
     }
 
-    public Task<Room> GetRoomByIdAsync(long id)
+    public async Task<Room> GetRoomByIdAsync(long id)
     {
-        return _apiService.GetAsync<Room>($"rooms/{id}");
+        return await _apiService.GetAsync<Room>($"rooms/{id}");
     }
 
     public class BookingService
