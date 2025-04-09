@@ -4,8 +4,8 @@
              x:Class="BookingApp.CheckBookingPage"
              Title="Check Booking Page"
              BackgroundColor="#64DF89">
-    
-    <Grid RowDefinitions="Auto,*" Padding="15">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="15" RowSpacing="10">
         <!-- Header with Title -->
         <Border Grid.Row="0" 
             BackgroundColor="#8F4A56" 
@@ -17,31 +17,88 @@
                HorizontalOptions="Center" 
                FontAttributes="Bold"/>
         </Border>
-    
-    
-    <StackLayout Padding="20" Grid.Row="1">
-        <Label Text="Available Rooms" 
-               FontSize="24" 
-               FontAttributes="Bold"
-               Margin="0,0,0,20"/>
 
-        <ListView x:Name="RoomsListView" HasUnevenRows="True">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Border Margin="5" Padding="10" Stroke="LightGray">
-                            <StackLayout>
-                                <Label Text="{Binding RoomNumber, StringFormat='Room: {0}'}" FontAttributes="Bold"/>
-                                <Label Text="{Binding RoomType, StringFormat='Type: {0}'}"/>
-                                <Label Text="{Binding PricePerNight, StringFormat='Price: ${0}/night'}"/>
-                                <Label Text="{Binding Status, StringFormat='Status: {0}'}" 
-                                       TextColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"/>
-                            </StackLayout>
-                        </Border>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+        <!-- Month display and navigation -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" Margin="0,10,0,0">
+            <Button Grid.Column="0" 
+                    Text="&lt;" 
+                    x:Name="PreviousMonthBtn"
+                    Clicked="OnPreviousMonthClicked" 
+                    BackgroundColor="#8F4A56"
+                    TextColor="White"/>
+
+            <Label Grid.Column="1" 
+                   x:Name="MonthYearLabel" 
+                   Text="March 2025" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <Button Grid.Column="2" 
+                    Text="&gt;" 
+                    x:Name="NextMonthBtn"
+                    Clicked="OnNextMonthClicked" 
+                    BackgroundColor="#8F4A56"
+                    TextColor="White"/>
+        </Grid>
+
+        <!-- Calendar Grid -->
+        <Grid Grid.Row="2" x:Name="CalendarGrid" Margin="0,10,0,10">
+            <!-- Day of Week Headers -->
+            <Grid ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="Auto" x:Name="DayHeadersGrid">
+                <Label Grid.Column="0" Text="Sun" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="Mon" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="2" Text="Tue" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="3" Text="Wed" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="4" Text="Thu" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="5" Text="Fri" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="6" Text="Sat" HorizontalOptions="Center" FontAttributes="Bold"/>
+            </Grid>
+
+            <!-- Calendar cells will be generated in code -->
+            <Grid ColumnDefinitions="*,*,*,*,*,*,*" 
+                  RowDefinitions="*,*,*,*,*,*" 
+                  x:Name="DaysGrid" 
+                  Margin="0,30,0,0">
+                <!-- Calendar cells are created dynamically in code -->
+            </Grid>
+        </Grid>
+
+        <!-- Selected Day Details -->
+        <StackLayout Grid.Row="3" x:Name="SelectedDayDetails" Spacing="10">
+            <Label x:Name="SelectedDateLabel" 
+                   Text="Saturday 8th" 
+                   FontSize="20" 
+                   FontAttributes="Bold"/>
+
+            <Label Text="Rooms" 
+                   FontSize="18" 
+                   FontAttributes="Bold"/>
+
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="5">
+                <Label Grid.Row="0" Grid.Column="0" Text="Ground Floor: 3 guests"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="1: 2 guests"/>
+                <Label Grid.Row="2" Grid.Column="0" Text="2: 1 guest"/>
+                <Label Grid.Row="3" Grid.Column="0" Text="3: 1 guest"/>
+                <Label Grid.Row="4" Grid.Column="0" Text="4: 2 guests"/>
+                <Label Grid.Row="5" Grid.Column="0" Text="5: 1 guest"/>
+                <Label Grid.Row="6" Grid.Column="0" Text="6: 1 guest"/>
+                <Label Grid.Row="7" Grid.Column="0" Text="7: 2 guests"/>
+
+                <!-- Edit button in the corner -->
+                <Button Grid.Row="0" 
+                        Grid.Column="1" 
+                        Grid.RowSpan="2" 
+                        x:Name="EditBookingsBtn"
+                        Text="✏️" 
+                        BackgroundColor="#8F4A56"
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        WidthRequest="50"
+                        Clicked="OnEditBookingsClicked"/>
+            </Grid>
+        </StackLayout>
     </Grid>
 </ContentPage>
