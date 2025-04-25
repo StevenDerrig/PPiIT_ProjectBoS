@@ -78,10 +78,7 @@ public partial class CheckBookingPage : ContentPage
         foreach (var booking in _bookings)
         {
             DateTime currentDate = booking.CheckInDate.Date;
-            DateTime endDate = booking.CheckOutDate.Date;
 
-            while (currentDate <= endDate)
-            {
                 DateTime bookingDate = currentDate.Date;
 
                 if (!bookingsByDate.ContainsKey(currentDate))
@@ -91,8 +88,6 @@ public partial class CheckBookingPage : ContentPage
                 }
                 bookingsByDate[currentDate].Add(booking);
                 bookingCountPerDay[currentDate]++;
-                currentDate = currentDate.AddDays(1);
-            }
         }
     }
 
