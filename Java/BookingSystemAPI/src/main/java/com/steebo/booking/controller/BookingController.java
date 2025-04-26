@@ -13,6 +13,7 @@ import com.steebo.booking.service.BookingService;
 import com.steebo.booking.service.GuestService;
 import com.steebo.booking.service.RoomService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,35 @@ public class BookingController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+    
+	@GetMapping("/search")
+	public ResponseEntity<List<Booking>> searchBookings(@RequestParam(required = false) String guestName,
+			@RequestParam(required = false) String contactNumber, @RequestParam(required = false) String roomNumber) {
+
+		List<Booking> results = new ArrayList<>();
+
+		if (guestName != null && !guestName.isEmpty()) {
+			// Search by guest name
+			results = bookingService.findBookingsByGuestName(guestName);
+		} else if (contactNumber != null && !contactNumber.isEmpty()) {
+			// Search by contact number
+			results = bookingService.findBookingsByContactNumber(contactNumber);
+		} else if (roomNumber != null && !roomNumber.isEmpty()) {
+			// Search by room number
+			results = bookingService.findBookingsByRoomNumber(roomNumber);
+		}
+
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
+	
+	@GetMapping("/date-range")
+	public ResponseEntity<List<Booking>> getBookingsInDateRange(
+	        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
+	        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate) {
+	    
+	    List<Booking> bookings = bookingService.getBookingsForDateRange(fromDate, toDate);
+	    return new ResponseEntity<>(bookings, HttpStatus.OK);
+	}
 
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest request) {
@@ -131,11 +161,22 @@ public class BookingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Booking> updateBooking(@PathVariable Integer id, @RequestBody Booking booking) {
+    public ResponseEntity<Booking> updateBooking(@PathVariable Integer id, @RequestBody BookingUpdateRequest request) {
         return bookingService.getBookingById(id)
                 .map(existingBooking -> {
-                    booking.setBookingId(id);
-                    Booking updatedBooking = bookingService.saveBooking(booking);
+                	existingBooking.setCheckInDate(request.getCheckInDate());
+                    existingBooking.setCheckOutDate(request.getCheckOutDate());
+                    existingBooking.setBreakfastIncluded(request.isBreakfastIncluded());
+                    existingBooking.setNotes(request.getNotes());
+                    
+                    // Apply updated prices
+                    Room room = existingBooking.getRoom();
+                    long nights = (request.getCheckOutDate().getTime() - request.getCheckInDate().getTime()) / (1000 * 60 * 60 * 24);
+                    int totalPrice = room.getPricePerNight() * (int)nights;
+                    existingBooking.setTotalPrice(totalPrice);
+                    
+                    // Save the updated booking to the database
+                    Booking updatedBooking = bookingService.saveBooking(existingBooking);
                     return new ResponseEntity<>(updatedBooking, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -260,6 +301,47 @@ public class BookingController {
                     ", breakfastIncluded=" + breakfastIncluded +
                     ", notes='" + notes + '\'' +
                     '}';
+        }
+    }
+    
+    // Inner class for booking update request
+    public static class BookingUpdateRequest {
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private Date checkInDate;
+        
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private Date checkOutDate;
+        
+        private boolean breakfastIncluded;
+        private String notes;
+        
+        // Getters and setters
+        public Date getCheckInDate() {
+            return checkInDate;
+        }
+        
+        public void setCheckInDate(Date checkInDate) {
+            this.checkInDate = checkInDate;
+        }
+        
+        public Date getCheckOutDate() {
+            return checkOutDate;
+        }
+        
+        public void setCheckOutDate(Date checkOutDate) {
+            this.checkOutDate = checkOutDate;
+        }
+        
+        public boolean isBreakfastIncluded() {
+            return breakfastIncluded;
+        }
+        
+        public void setBreakfastIncluded(boolean breakfastIncluded) {
+            this.breakfastIncluded = breakfastIncluded;
+        }
+        
+        public String getNotes() {
+            return notes;
         }
     }
 }
