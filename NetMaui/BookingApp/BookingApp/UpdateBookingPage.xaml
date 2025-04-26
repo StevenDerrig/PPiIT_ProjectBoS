@@ -67,22 +67,22 @@
                        EmptyView="No bookings found for your search criteria.">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="0,5" Padding="10" BackgroundColor="LightGray" StrokeThickness="1">
+                        <Border Margin="0,5" Padding="10" BackgroundColor="Black" StrokeThickness="1">
                             <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
                                 <Label Grid.Row="0" Grid.Column="0" 
                        Text="{Binding Guest.FirstName, StringFormat='Guest: {0} {1}'}" 
-                       FontAttributes="Bold"/>
+                       FontAttributes="Bold" TextColor="White"/>
 
                                 <Label Grid.Row="1" Grid.Column="0" 
-                       Text="{Binding Room.RoomNumber, StringFormat='Room: {0}'}"/>
+                       Text="{Binding Room.RoomNumber, StringFormat='Room: {0}'}" TextColor="White"/>
 
                                 <Label Grid.Row="2" Grid.Column="0" 
                        Text="{Binding CheckInDate, StringFormat='Check-in: {0:d} - {1:d}'}"
-                       Margin="0,5,0,0"/>
+                       Margin="0,5,0,0" TextColor="White"/>
 
                                 <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
                        Text="{Binding BookingStatus}" 
-                       TextColor="Black"
+                       TextColor="White"
                        VerticalOptions="Center"/>
                             </Grid>
                         </Border>
@@ -116,7 +116,7 @@
                 </Grid>
 
                 <!-- Booking Details -->
-                <Border Stroke="LightGray" Padding="10" BackgroundColor="#EEEEEE">
+                <Border Stroke="LightGray" Padding="10" BackgroundColor="Black">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Booking Details" FontAttributes="Bold" />
 
