@@ -4,19 +4,155 @@
              x:Class="BookingApp.UpdateBookingPage"
              Title="Update Booking Page"
              BackgroundColor="#64DF89">
-    
-    <Grid RowDefinitions="Auto,*" Padding="15">
-        <!-- Header with Title -->
-        <Border Grid.Row="0" 
-                BackgroundColor="#8F4A56" 
-                Padding="10" 
-                StrokeThickness="0">
-            <Label Text="Update Bookings" 
-                   TextColor="#4A8F83" 
-                   FontSize="22" 
+
+    <ScrollView Grid.Row="1">
+        <VerticalStackLayout Spacing="20" Padding="10">
+            <!-- Search Section -->
+            <Border BackgroundColor="#8F4A56" Padding="10" StrokeThickness="0">
+                <Label Text="Find Booking" 
+                   TextColor="White" 
+                   FontSize="18" 
                    HorizontalOptions="Center" 
                    FontAttributes="Bold"/>
-        </Border>
+            </Border>
 
-    </Grid>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="10">
+                <!-- Search Options -->
+                <Label Grid.Row="0" Grid.Column="0" Text="Search By:" VerticalOptions="Center"/>
+                <Picker Grid.Row="0" Grid.Column="1" x:Name="SearchTypePicker" 
+                    Title="Select search criteria" TitleColor="Black" TextColor="Black">
+                    <Picker.Items>
+                        <x:String>Booking ID</x:String>
+                        <x:String>Guest Name</x:String>
+                        <x:String>Contact Number</x:String>
+                        <x:String>Room Number</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <!-- Search Input -->
+                <Label Grid.Row="1" Grid.Column="0" Text="Search Value:" VerticalOptions="Center"/>
+                <Entry Grid.Row="1" Grid.Column="1" x:Name="SearchEntry" Placeholder="Enter search value"/>
+
+                <!-- Search Button -->
+                <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                    x:Name="SearchButton"
+                    Text="Search Bookings"
+                    Clicked="OnSearchButtonClicked"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"/>
+            </Grid>
+
+            <!-- Date Range Filtering (Optional) -->
+            <Label Text="Or Browse by Date Range" FontSize="16" FontAttributes="Bold" Margin="0,10,0,0"/>
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="10">
+                <Label Grid.Row="0" Grid.Column="0" Text="From:" VerticalOptions="Center"/>
+                <DatePicker Grid.Row="0" Grid.Column="1" x:Name="FromDatePicker"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Text="To:" VerticalOptions="Center"/>
+                <DatePicker Grid.Row="1" Grid.Column="1" x:Name="ToDatePicker"/>
+            </Grid>
+
+            <Button x:Name="BrowseButton"
+                Text="Browse Bookings"
+                Clicked="OnBrowseButtonClicked"
+                BackgroundColor="#4CAF50"
+                TextColor="White"/>
+
+            <!-- Search Results -->
+            <Label Text="Search Results" FontSize="18" FontAttributes="Bold" Margin="0,20,0,0" />
+
+            <CollectionView x:Name="BookingsCollectionView" 
+                       SelectionMode="Single"
+                       SelectionChanged="OnBookingSelected"
+                       EmptyView="No bookings found for your search criteria.">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,5" Padding="10" BackgroundColor="LightGray" StrokeThickness="1">
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <Label Grid.Row="0" Grid.Column="0" 
+                       Text="{Binding Guest.FirstName, StringFormat='Guest: {0} {1}'}" 
+                       FontAttributes="Bold"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" 
+                       Text="{Binding Room.RoomNumber, StringFormat='Room: {0}'}"/>
+
+                                <Label Grid.Row="2" Grid.Column="0" 
+                       Text="{Binding CheckInDate, StringFormat='Check-in: {0:d} - {1:d}'}"
+                       Margin="0,5,0,0"/>
+
+                                <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                       Text="{Binding BookingStatus}" 
+                       TextColor="Black"
+                       VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Edit Booking Section (Initially Hidden) -->
+            <VerticalStackLayout x:Name="EditBookingSection" IsVisible="False" Spacing="15">
+                <Border BackgroundColor="#8F4A56" Padding="10" StrokeThickness="0">
+                    <Label Text="Edit Booking" 
+                       TextColor="White" 
+                       FontSize="18" 
+                       HorizontalOptions="Center" 
+                       FontAttributes="Bold"/>
+                </Border>
+
+                <!-- Booking Info Display -->
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5" ColumnSpacing="10">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Booking ID:" FontAttributes="Bold"/>
+                    <Label Grid.Row="0" Grid.Column="1" x:Name="BookingIdLabel"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="Guest:" FontAttributes="Bold"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="GuestNameLabel"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Text="Room:" FontAttributes="Bold"/>
+                    <Label Grid.Row="2" Grid.Column="1" x:Name="RoomNumberLabel"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Text="Status:" FontAttributes="Bold"/>
+                    <Label Grid.Row="3" Grid.Column="1" x:Name="BookingStatusLabel"/>
+                </Grid>
+
+                <!-- Booking Details -->
+                <Border Stroke="LightGray" Padding="10" BackgroundColor="#EEEEEE">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Booking Details" FontAttributes="Bold" />
+
+                        <Label Text="Check-in Date:" />
+                        <DatePicker x:Name="EditCheckInDatePicker" />
+
+                        <Label Text="Check-out Date:" />
+                        <DatePicker x:Name="EditCheckOutDatePicker" />
+
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox x:Name="EditBreakfastCheckBox" />
+                            <Label Text="Include Breakfast" VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <Label Text="Notes:" />
+                        <Editor x:Name="EditNotesEditor" HeightRequest="100" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Action Buttons -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                        x:Name="SaveChangesButton"
+                        Text="Save Changes"
+                        Clicked="OnSaveChangesClicked"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"/>
+
+                    <Button Grid.Column="1"
+                        x:Name="DeleteBookingButton"
+                        Text="Delete Booking"
+                        Clicked="OnDeleteBookingClicked"
+                        BackgroundColor="#F44336"
+                        TextColor="White"/>
+                </Grid>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
