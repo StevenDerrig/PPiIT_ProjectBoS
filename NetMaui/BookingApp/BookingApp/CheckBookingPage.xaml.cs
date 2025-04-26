@@ -97,7 +97,17 @@ public partial class CheckBookingPage : ContentPage
         DaysGrid.Children.Clear();
         calendarCells.Clear();
 
+        // Set the inital visibility of the calendar
+        CalendarScrollView.IsVisible = true;
+        DayNavigationGrid.IsVisible = false;
+
         MonthYearLabel.Text = currentDate.ToString("MMMM yyyy");
+
+        // Set the number of columns in the grid
+        foreach (var rowDefinition in DaysGrid.RowDefinitions)
+        {
+            rowDefinition.Height = 60;
+        }
 
         // Get the first day of the month and the number of days in the month
         DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
@@ -129,7 +139,8 @@ public partial class CheckBookingPage : ContentPage
                 Padding = new Thickness(5),
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
-                HeightRequest = 60
+                HeightRequest = 60,
+                MinimumHeightRequest = 60
             };
 
             // Stack layout to hold the date and occupancy indicator
@@ -237,19 +248,6 @@ public partial class CheckBookingPage : ContentPage
         {
             var bookingsByRoom = dayBooking.GroupBy(b => b.Room.RoomId).ToDictionary(g => g.Key, g => g.ToList());
 
-            // Handle for the ground floor id
-            //var groundFloorBookings = dayBooking.Where(b => b.Room.RoomNumber.ToLower().Contains("ground")).ToList();
-            /*
-             * if (groundFloorBookings.Any())
-            {
-                roomDetailsLayout.Children.Add(new Label
-                {
-                    Text = $"Ground Floor: {groundFloorBookings.Count} guest(s)",
-                    FontSize = 16
-                });
-            }
-             */
-
             // Room display
             foreach (var room in _rooms.OrderBy(r => r.RoomId))
             {
@@ -301,6 +299,12 @@ public partial class CheckBookingPage : ContentPage
         };
         editButton.Clicked += OnEditBookingsClicked;
         SelectedDayDetails.Children.Add(editButton);
+
+        // Change the layout from the calendar to the selected date
+        if (!DayNavigationGrid.IsVisible && !CalendarGrid.IsVisible)
+        {
+            DayNavigationGrid.IsVisible = true;
+        }
     }
 
     private void OnCalendarCellTapped(object sender, EventArgs e)
@@ -309,7 +313,11 @@ public partial class CheckBookingPage : ContentPage
         {
             selectedDate = cellDate;
 
-            UpdateCalendarUI();
+            // Switch to day navigation view
+            CalendarScrollView.IsVisible = false;
+            DayNavigationGrid.IsVisible = true;
+
+            //UpdateCalendarUI();
             DisplaySelectedDateBookings();
         }
     }
@@ -330,11 +338,40 @@ public partial class CheckBookingPage : ContentPage
         LoadBookingData();
     }
 
+    // Previous day button
+    private void OnPreviousDayClicked(object sender, EventArgs e)
+    {
+        selectedDate = selectedDate.AddDays(-1);
+        DisplaySelectedDateBookings();
+    }
+
+    // Next day button
+    private void OnNextDayClicked(object sender, EventArgs e)
+    {
+        selectedDate = selectedDate.AddDays(1);
+        DisplaySelectedDateBookings();
+    }
+
+    // Back to calendar view button
+    private void OnCalendarViewClicked(object sender, EventArgs e)
+    {
+        // Switch back to calendar view
+        CalendarScrollView.IsVisible = true;
+        DayNavigationGrid.IsVisible = false;
+
+        // Update calendar UI to highlight the selected date
+        UpdateCalendarUI();
+    }
+
     // Edit booking button
     private async void OnEditBookingsClicked(object sender, EventArgs e)
     {
+        var dayBookings = _bookings.Where(b =>
+        b.CheckInDate.Date <= selectedDate.Date &&
+        selectedDate.Date < b.CheckOutDate.Date).ToList();
+
         // Check if we have bookings for this date
-        if (bookingsByDate.TryGetValue(selectedDate.Date, out var dayBookings) && dayBookings.Any())
+        if (dayBookings.Any())
         {
             // Forward to the update booking page with these bookings
             await Navigation.PushAsync(new UpdateBookingPage(selectedDate, dayBookings));
