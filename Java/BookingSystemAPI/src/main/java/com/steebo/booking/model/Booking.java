@@ -61,6 +61,10 @@ public class Booking {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     
+    @Column(name = "last_modified")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModified;
+    
     // Default constructor
     public Booking() {
     }
@@ -152,6 +156,14 @@ public class Booking {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public Date getLastModified() {
+    	return lastModified;
+    }
+    
+    public void setLastModified(Date lastModified) {
+    	this.lastModified = lastModified;
     }
     
     // equals and hashCode

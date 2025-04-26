@@ -54,4 +54,17 @@ public interface BookingRepo extends JpaRepository<Booking, Integer> {
     // Find upcoming check-outs for today
     @Query("SELECT b FROM Booking b WHERE b.checkOutDate = CURRENT_DATE AND b.bookingStatus = 'checked_in'")
     List<Booking> findTodayCheckOuts();
+    
+    // Update booking search queries
+    // Search by entered name, ignore the case
+    @Query("SELECT b FROM Booking b JOIN b.guest g WHERE LOWER(CONCAT(g.firstName, ' ', g.lastName)) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<Booking> findByGuestNameContainingIgnoreCase(@Param("name") String name);
+    
+    // Find guest's contact number
+    @Query("SELECT b FROM Booking b JOIN b.guest g WHERE g.contactNumber LIKE %:contactNumber%")
+    List<Booking> findByGuestContactNumberContaining(@Param("contactNumber") String contactNumber);
+    
+    // Find guests that are in that room
+    @Query("SELECT b FROM Booking b JOIN b.room r WHERE r.roomNumber LIKE %:roomNumber%")
+    List<Booking> findByRoomNumberContaining(@Param("roomNumber") String roomNumber);
 }
